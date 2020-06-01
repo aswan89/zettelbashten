@@ -49,13 +49,16 @@ while read tag
 done <<< "${tagline}"
 q_string=${q_string%????????}
 q_string+=") && id!=${zettel_id}"
+touch $zettel_dir/linker.rec
 recsel -e "${q_string}" -p id,contents,tag $kasten_file >> $zettel_dir/linker.rec
+if [ -s $zettel_dir/linker.rec ] 
+then
 recset -f link -a no $zettel_dir/linker.rec
 $EDITOR $zettel_dir/linker.rec > /dev/tty
 recsel -C -P id -e 'link="yes"' $zettel_dir/linker.rec | while read link
 do
   recset -e "id=${zettel_id}" -f reference -a $link $kasten_file
 done
-
+fi
 rm ${zettel_dir}/zettel.md
 rm ${zettel_dir}/linker.rec
