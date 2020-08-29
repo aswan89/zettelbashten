@@ -28,7 +28,7 @@ $EDITOR ${zettel_dir}/zettel.md > /dev/tty
 
 zettel_contents=$(head -n -1 ${zettel_dir}/zettel.md)
 tagline=$(tail -1 ${zettel_dir}/zettel.md)
-tagline=$(printf "%s\n" ${tagline#tags: } | tr -d ",")
+#tagline=$(printf "%s\n" ${tagline#tags: } | tr -d ",")
 zettel_id=$(date +%s)
 
 recins -t Zettel \
@@ -37,8 +37,11 @@ recins -t Zettel \
   -f contents -v "${zettel_contents}" \
   $kasten_file
 q_string="(tag='"
-while read tag
+OIFS=$IFS
+IFS=','
+for tag in ${tagline#tags: }
   do
+    tag=$(echo $tag | xargs)
     recset -t Zettel \
       -e "id=${zettel_id}" \
       -f tag -a $tag \
@@ -46,7 +49,8 @@ while read tag
 
     q_string+=$tag
     q_string+="' || tag='"
-done <<< "${tagline}"
+done 
+IFS=$OIFS
 q_string=${q_string%????????}
 q_string+=") && id!=${zettel_id}"
 touch $zettel_dir/linker.rec
