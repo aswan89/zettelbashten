@@ -11,6 +11,7 @@ done
 if [[ $OPTIND == 1 ]];then 
   zettel_dir="$HOME/zettelkasten" 
 fi
+TMPDIR=${zettel_dir}
 
 mkdir -p $zettel_dir
 kasten_file=${zettel_dir}/kasten.rec
