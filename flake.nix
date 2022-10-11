@@ -29,12 +29,7 @@
         zettelbashten = with final; stdenv.mkDerivation rec {
           name = "zettelbashten";
           version = "v0.2";
-          src = fetchFromGitHub {
-            owner = "aswan89";
-            repo = name;
-            rev = version;
-            sha256 = "0m8162zk7iq7f7m93lspkwhykj4hk56dmr99jhb6hjhv3r6z2lhy";
-          };
+          src = ./.;
           patchPhase = "patchShebangs zettel_create";
           buildInputs = [ makeWrapper ];
           installPhase = let deps = lib.makeBinPath [ recutils ]; in 
